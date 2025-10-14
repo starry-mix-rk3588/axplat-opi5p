@@ -72,4 +72,10 @@ impl ConsoleIf for ConsoleIfImpl {
         }
         read_len
     }
+
+        /// Returns the IRQ number for the console, if applicable.
+    #[cfg(feature = "irq")]
+    fn irq_number() -> Option<u32> {
+        None
+    }
 }

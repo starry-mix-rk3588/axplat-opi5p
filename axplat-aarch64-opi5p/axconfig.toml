@@ -44,6 +44,8 @@ cpu-id-list = [0x00, 0x100, 0x200, 0x300, 0x400, 0x500, 0x600, 0x700]
 [devices]
 # MMIO ranges with format (`base_paddr`, `size`).
 mmio-ranges = [
+    [0xfdab0000, 0x3000],   # npu@fdab0000, npu0,npu1,npu2,len=0x3000
+    [0xfd8d8000, 0x1000],   # power-management, len = 0x400
     [0xfd5f8000, 0x1000],   # bus ioc, len=0x100
     [0xfd7c0000, 0x5c000],  # cru
     [0xfeb50000, 0x1000],   # uart8250
