@@ -3,9 +3,9 @@
 # ==============================================
 # 刷写内核脚本
 # 适用于 Rockchip 平台
-# Usage: ./make_flash.sh [target=SD|EMMC] # Flash Kernel to SD or eMMC
-#        ./make_flash.sh [target=SD|EMMC] rootfs=path/to/rootfs.img # Flash custom rootfs
-#        ./make_flash.sh [target=SD|EMMC] partition # Flash custom partition table
+# Usage: ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] # Flash Kernel to SD or eMMC
+#        ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] rootfs=path/to/rootfs.img # Flash custom rootfs
+#        ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] partition # Flash custom partition table
 # ==============================================
 
 set -e  # 遇到错误立即退出
@@ -166,6 +166,12 @@ main() {
                     error "Invalid target '$TARGET'. Must be 'SD' or 'EMMC'"
                 fi
                 FLASH_TARGET="$TARGET"
+                ;;
+            uimg=*)
+                UIMAGE="${arg#*=}"
+                if [ ! -f "$UIMAGE" ]; then
+                    error "Boot image '$UIMAGE' not found"
+                fi
                 ;;
             partition)
                 PARTITION_ONLY=true
