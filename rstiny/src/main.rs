@@ -26,7 +26,7 @@ pub fn rust_main(cpu_id: usize, arg: usize) -> ! {
     utils::mem::clear_bss();
     init_kernel(cpu_id, arg);
 
-    axplat::console_println!("Hello, ArceOS!");
+    axplat::console_println!("Hello, RSTiny!");
 
     utils::logging::log_init();
 
