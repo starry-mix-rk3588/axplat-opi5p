@@ -22,3 +22,6 @@ panic = "abort"
 
 [profile.release]
 panic = "abort"
+
+[patch.crates-io]
+axplat = { git = "https://github.com/Starry-OS/axplat_crates.git", rev = "243fdc9" }
