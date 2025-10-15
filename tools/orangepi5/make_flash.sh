@@ -5,7 +5,7 @@
 # 适用于 Rockchip 平台
 # Usage: ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] # Flash Kernel to SD or eMMC
 #        ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] rootfs=path/to/rootfs.img # Flash custom rootfs
-#        ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] partition # Flash custom partition table
+#        ./make_flash.sh [target=SD|EMMC] partition # Flash custom partition table
 # ==============================================
 
 set -e  # 遇到错误立即退出

@@ -56,13 +56,13 @@ build: $(OUT_CONFIG)
 
 img: build
 	@echo "Make $(PROJECT_NAME) on Orange Pi 5..."
-	sudo bash $(TOOL_PATH)/make_disk.sh $(kernel_img) $(kernel_bin)
+	sudo bash $(TOOL_PATH)/make_boot.sh $(kernel_bin) $(kernel_img)
 
 $(kernel_img): img
 
 flash: $(kernel_img)
 	@echo "Flash $(PROJECT_NAME) to Orange Pi 5..."
-	bash $(TOOL_PATH)/make_flash.sh $(kernel_img)
+	sudo bash $(TOOL_PATH)/make_flash.sh uimg=$(kernel_img)
 
 upload: $(kernel_img)
 	@echo "Upload $(PROJECT_NAME) to Orange Pi 5..."

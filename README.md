@@ -77,3 +77,18 @@ sudo rkdeveloptool wlx boot <IMG_FILE_NAME> # 直接烧写SD卡镜像
 sudo rkdeveloptool rd
 ```
 
+## Rkdeveloptool
+
+``` bash
+dd if=/dev/zero of=zeros.img bs=1M count=128 # 生成空文件
+```
+
+## U-Boot 操作
+
+``` bash
+mmc list # 查看设备
+mmc dev 1 # 切换到指定设备
+mmc part # 查看分区表
+ext4load mmc 1:1 0x400000 kernel.uimg # 加载内核
+go 0x400000 # 跳转到指定位置
+```
