@@ -22,6 +22,7 @@ KERNEL_SOURCE="$1"  # 源内核文件
 TARGET_PATH="/kernel.uimg"   # 镜像中的目标路径
 DTB_PATH="/rk3588-orangepi-5-plus.dtb" # 设备树文件路径
 ORANGEPI5_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+BOOT_CMD="boot.cmd"
 
 # 颜色输出定义
 RED='\033[0;31m'
@@ -95,8 +96,8 @@ mount_and_copy() {
     info "挂载镜像..."
     sudo mount -o loop "$OUTPUT_IMAGE" "$MOUNT_POINT"
 
-    info "制作 boot.src 文件..."
-    mkimage -A arm -T script -C none -n "TF boot" -d "${ORANGEPI5_DIR}/boot.cmd" boot.scr
+    info "使用 ${BOOT_CMD} 制作 boot.src 文件..."
+    mkimage -A arm -T script -C none -n "TF boot" -d "${ORANGEPI5_DIR}/${BOOT_CMD}" boot.scr
     
     info "复制 boot 文件到镜像中..."
     sudo cp boot.scr "${MOUNT_POINT}"

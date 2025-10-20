@@ -3,8 +3,8 @@
 # ==============================================
 # 刷写内核脚本
 # 适用于 Rockchip 平台
-# Usage: ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] # Flash Kernel to SD or eMMC
-#        ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] rootfs=path/to/rootfs.img # Flash custom rootfs
+# Usage: ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] [uboot]# Flash Kernel to SD or eMMC
+#        ./make_flash.sh [target=SD|EMMC] [uimg=path/to/uimg] rootfs=path/to/rootfs.img [uboot]# Flash custom rootfs
 #        ./make_flash.sh [target=SD|EMMC] partition # Flash custom partition table
 # ==============================================
 
@@ -175,6 +175,9 @@ main() {
                 ;;
             partition)
                 PARTITION_ONLY=true
+                ;;
+            uboot)
+                FLASH_UBOOT=true
                 ;;
             *)
                 error "Unknown argument: $arg"
