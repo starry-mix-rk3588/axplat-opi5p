@@ -51,7 +51,7 @@ mmio-ranges = [
     [0xfeb50000, 0x1000],   # uart8250
     [0xfeba0000, 0x1000],   # uart7
     [0xfec40000, 0x1000],   # gpio3, len=0x100
-    [0xfe600000, 0x20000],  # arm,gic-v3
+    [0xfe600000, 0x10000],  # arm,gic-v3
     [0xfe680000, 0x100000], # arm,gic-v3
     [0xfe180000, 0x10000],  # rockchip,rk3588-pcie
     [0xfe190000, 0x10000],  # rockchip,rk3588-pcie
@@ -71,7 +71,7 @@ uart-irq = 0x14d # uint
 timer-irq = 30 # uint
 
 # GIC CPU Interface base address
-gicc-paddr = 0xfe610000 # uint
+# gicc-paddr = 0xfe610000 # uint
 # GIC Distributor base address
 gicd-paddr = 0xfe600000 # uint
 # GICR Address of rk3588

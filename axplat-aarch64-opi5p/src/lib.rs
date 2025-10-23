@@ -4,6 +4,7 @@
 extern crate axplat;
 
 extern crate log;
+extern crate alloc;
 
 pub mod config {
     //! Platform configuration module.
@@ -24,11 +25,16 @@ mod boot;
 mod dw_apb_uart;
 mod init;
 mod mem;
+mod generic_timer;
+mod psci;
 #[cfg(feature = "smp")]
 mod mp;
 mod power;
 
-axplat_aarch64_peripherals::time_if_impl!(TimeIfImpl);
-
 #[cfg(feature = "irq")]
-axplat_aarch64_peripherals::irq_if_impl!(IrqIfImpl);
+mod irq;
+
+// axplat_aarch64_peripherals::time_if_impl!(TimeIfImpl);
+
+// #[cfg(feature = "irq")]
+// axplat_aarch64_peripherals::irq_if_impl!(IrqIfImpl);

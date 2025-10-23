@@ -29,5 +29,8 @@ axcpu = "0.2"
 axplat = "0.2.0"
 axplat-aarch64-peripherals = "0.2.0"
 aarch64-cpu = "10.0"
+memory_addr = "0.4"
+arm-gic-driver = "0.14"
+int_ratio = "0.1"
 [package.metadata.docs.rs]
 targets = ["aarch64-unknown-none"]
