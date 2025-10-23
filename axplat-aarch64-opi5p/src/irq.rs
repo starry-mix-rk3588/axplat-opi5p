@@ -20,6 +20,7 @@ const SPI_START: usize = 32;
 /// The maximum number of IRQs.
 const MAX_IRQ_COUNT: usize = 1024;
 
+#[allow(dead_code)]
 fn is_irq_private(irq_num: usize) -> bool {
     irq_num < SPI_START
 }
@@ -82,7 +83,7 @@ impl IrqIf for IrqIfImpl {
             GICR.lock().as_mut().unwrap().dir(irq);
         }
     }
-	fn send_ipi(irq_num: usize, target: axplat::irq::IpiTarget) {
+	fn send_ipi(_irq_num: usize, _target: axplat::irq::IpiTarget) {
 		todo!("send_ipi");
 	}
 }
@@ -108,6 +109,7 @@ pub(crate) fn init() {
     info!("GIC initialized {}",current_cpu());
 }
 
+#[allow(dead_code)]
 pub(crate) fn init_current_cpu() {
     debug!("Initializing GICR for current CPU {}",current_cpu());
     let mut interface = GICD.lock().as_mut().unwrap().cpu_local().unwrap();

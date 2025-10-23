@@ -36,6 +36,7 @@ pub fn init_early() {
 
 /// Set UART IRQ Enable
 #[cfg(feature = "irq")]
+#[allow(dead_code)]
 pub fn init_irq() {
     use axplat::irq::register;
     UART.lock().set_ier(true);
