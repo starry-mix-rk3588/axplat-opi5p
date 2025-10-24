@@ -46,4 +46,8 @@ flash: $(kernel_bin)
 
 tftp: $(kernel_uimg)
 	@echo "Copy $(PROJECT_NAME) to TFTP directory..."
-	sudo cp $(kernel_uimg) /data/docker/tftpboot/data/
+	cp $(kernel_uimg) /data/docker/tftpboot/data/kernel.uimg
+
+mini: $(kernel_uimg)
+	@echo "Copy $(PROJECT_NAME) to MINI directory..."
+	scp -o 'ProxyJump web@20.13.0.88' $(kernel_uimg) debin@10.1.135.123:/data/docker/tftpboot/data/
