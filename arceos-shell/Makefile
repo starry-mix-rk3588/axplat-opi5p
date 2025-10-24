@@ -9,6 +9,7 @@ PLAT_CONFIG = $(PWD)/axplat-aarch64-opi5p/axconfig.toml
 kernel_elf = $(PWD)/target/$(TARGET)/$(MODE)/$(PROJECT_NAME)
 kernel_bin = $(kernel_elf).bin
 kernel_img = $(kernel_elf).img
+kernel_uimg = $(kernel_elf).uimg
 kernel_asm = $(kernel_elf)_asm.txt
 
 ifeq ($(MODE), release)
@@ -54,6 +55,9 @@ build: $(OUT_CONFIG)
 	@echo "Dump $(kernel_asm)"
 	@rust-objdump -d --print-imm-hex $(kernel_elf) > $(kernel_asm)
 
+	@echo "Generating $(kernel_uimg)..."
+	@mkimage -A arm64 -O linux -T kernel -C none -a 0x400000 -e 0x4000000 -n "$(PROJECT_NAME)" -d $(kernel_bin) $(kernel_uimg)
+
 img: build
 	@echo "Make $(PROJECT_NAME) on Orange Pi 5..."
 	sudo bash $(TOOL_PATH)/make_boot.sh $(kernel_bin) $(kernel_img)
@@ -61,3 +65,7 @@ img: build
 flash: $(kernel_bin)
 	@echo "Flash $(PROJECT_NAME) to Orange Pi 5..."
 	sudo bash $(TOOL_PATH)/make_flash.sh uimg=$(kernel_bin)
+
+tftp: $(kernel_uimg)
+	@echo "Copy $(PROJECT_NAME) to TFTP directory..."
+	sudo cp $(kernel_uimg) /data/docker/tftpboot/data/
