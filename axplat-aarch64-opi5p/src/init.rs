@@ -39,8 +39,8 @@ impl InitIf for InitIfImpl {
     fn init_later(_cpu_id: usize, _dtb: usize) {
           #[cfg(feature = "irq")]
         {
-            crate::irq::init();
-            crate::generic_timer::enable_irqs(TIMER_IRQ);
+            // crate::irq::init();
+            // crate::generic_timer::enable_irqs(TIMER_IRQ);
         }
     }
 

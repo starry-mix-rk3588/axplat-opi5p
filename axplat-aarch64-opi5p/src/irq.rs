@@ -36,7 +36,8 @@ struct IrqIfImpl;
 impl IrqIf for IrqIfImpl {
     /// Enables or disables the given IRQ.
     fn set_enable(irq_raw: usize, enabled: bool) {
-        set_enable(irq_raw, enabled);
+        warn!("set_enable IRQ {} {}", irq_raw, enabled);
+        // set_enable(irq_raw, enabled);
     }
 
     /// Registers an IRQ handler for the given IRQ.
