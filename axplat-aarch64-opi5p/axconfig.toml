@@ -53,9 +53,16 @@ mmio-ranges = [
     [0xfec40000, 0x1000],   # gpio3, len=0x100
     [0xfe600000, 0x10000],  # arm,gic-v3
     [0xfe680000, 0x100000], # arm,gic-v3
+    [0xfe150000, 0x10000],  # rockchip,rk3588-pcie
     [0xfe180000, 0x10000],  # rockchip,rk3588-pcie
     [0xfe190000, 0x10000],  # rockchip,rk3588-pcie
+    [0xfe1b0000, 0x10000],  # ethernet,gmac0
+    [0xfe1c0000, 0x10000],  # ethernet,gmac1
     [0xfe2c0000, 0x10000],  # rockchip,sdmmc
+    [0xf3100000, 0x10000],
+    [0x0a_40c0_0000, 0x1000_0000], # PCIe ECAM/DBI space (pcie@fe180000)
+    [0xf3200000, 0xe00000],      # PCIe 32-bit MMIO (pcie@fe180000)
+    [0x09c0000000, 0x40000000],  # PCIe 64-bit prefetchable (pcie@fe180000)
 ] # [(uint, uint)]
 # VirtIO MMIO ranges with format (`base_paddr`, `size`).
 virtio-mmio-ranges = [] # [(uint, uint)]
@@ -67,6 +74,15 @@ uart-paddr = 0xfeb50000 # uint
 # UART IRQ number (SPI, 0xd5)
 uart-irq = 0x14d # uint
 
+# Base physical address of the PCIe ECAM space (DBI space for pcie@fe180000)
+pci-ecam-base = 0x0a_40c0_0000      # uint
+# End PCI bus number (bus-range = <0x30 0x3f> in device tree)
+pci-bus-end = 0x3f                  # uint
+# PCI device memory ranges (from pcie@fe180000)
+pci-ranges = [
+    [0xf3200000, 0xe00000],         # 32-bit MMIO: 14MB
+    [0x09c0000000, 0x40000000],     # 64-bit prefetchable: 1GB
+] # [(uint, uint)]
 # Timer interrupt num (PPI, physical timer).
 timer-irq = 30 # uint
 
