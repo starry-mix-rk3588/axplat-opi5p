@@ -34,6 +34,8 @@ mod power;
 #[cfg(feature = "irq")]
 mod irq;
 
+mod uart;
+
 // axplat_aarch64_peripherals::time_if_impl!(TimeIfImpl);
 
 // #[cfg(feature = "irq")]

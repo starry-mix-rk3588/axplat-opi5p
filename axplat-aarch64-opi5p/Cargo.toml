@@ -22,7 +22,6 @@ smp = ["axplat/smp", "kspin/smp"]
 [dependencies]
 kspin = "0.1"
 page_table_entry = "0.5"
-dw_apb_uart = "0.1"
 log = "0.4"
 axconfig-macros = "0.2"
 axcpu = "0.2"
