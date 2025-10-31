@@ -8,31 +8,9 @@ use core::ptr::{read_volatile, write_volatile};
 use core::arch::asm;
 use kspin::SpinNoIrq;
 
-// 可选：如果项目提供了 register_structs! 与 ReadOnly/ReadWrite 类型，可解开以下注释以保持风格一致
-// register_structs! {
-//     DW8250Regs {
-//         (0x00 => rbr: ReadWrite<u32>),
-//         (0x04 => ier: ReadWrite<u32>),
-//         (0x08 => fcr: ReadWrite<u32>),
-//         (0x0c => lcr: ReadWrite<u32>),
-//         (0x10 => mcr: ReadWrite<u32>),
-//         (0x14 => lsr: ReadOnly<u32>),
-//         (0x18 => msr: ReadOnly<u32>),
-//         (0x1c => scr: ReadWrite<u32>),
-//         (0x20 => lpdll: ReadWrite<u32>),
-//         (0x24 => _reserved0),
-//         (0x7c => usr: ReadOnly<u32>),
-//         (0x80 => _reserved1),
-//         (0xc0 => dlf: ReadWrite<u32>),
-//         (0xc4 => @END),
-//     }
-// }
-
-// 与 include/cfg/t_cfg.h 保持一致（rk3588）
 const UART_BASE: usize = 0xfeb5_0000;
 const UART_IRQ: u32 = 333 + 32; // 365
 
-// 寄存器偏移（与 include/dev/t_dw_uart.h 一致）
 const RBR: usize = 0x00; // 读
 const THR: usize = 0x00; // 写
 const IER: usize = 0x04;
@@ -421,92 +399,6 @@ impl DW8250 {
     pub fn tx_sent_total(&self) -> u32 { self.tx_sent_total.load(Ordering::Relaxed) }
 }
 
-// 全局单例（与 C 全局状态对应）
-
-// // 对外导出与 C 相同的符号，便于无缝替换
-// #[no_mangle]
-// pub extern "C" fn dw_uart_early_init() { UART.early_init(); }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_init() { UART.init(); }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_putchar(c: u8) { UART.putchar(c); }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_putchar_nb(c: u8) -> bool { UART.putchar_nb(c) }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_putstr(s: *const u8) {
-//     // 安全：按 C 惯例，以 \0 结尾
-//     if s.is_null() { return; }
-//     unsafe {
-//         let mut p = s;
-//         loop {
-//             let ch = *p;
-//             if ch == 0 { break; }
-//             UART.putchar(ch);
-//             p = p.add(1);
-//         }
-//     }
-// }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_flush() { UART.flush(); }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_getchar() -> u8 { UART.getchar() }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_getchar_nb(c_out: *mut u8) -> bool {
-//     if c_out.is_null() { return false; }
-//     if let Some(c) = UART.getchar_nb() {
-//         unsafe { *c_out = c; }
-//         true
-//     } else { false }
-// }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_rx_available() -> bool { UART.rx_available() }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_tx_buffer_usage() -> u32 { UART.tx_buffer_usage() }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_get_stats(
-//     tx_irqs: *mut u32, rx_irqs: *mut u32, tx_usage: *mut u32, rx_usage: *mut u32,
-// ) {
-//     let (txi, rxi, txu, rxu) = UART.get_stats();
-//     unsafe {
-//         if !tx_irqs.is_null() { *tx_irqs = txi; }
-//         if !rx_irqs.is_null() { *rx_irqs = rxi; }
-//         if !tx_usage.is_null() { *tx_usage = txu; }
-//         if !rx_usage.is_null() { *rx_usage = rxu; }
-//     }
-// }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_is_tx_interrupt_enabled() -> bool { UART.is_tx_interrupt_enabled() }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_get_last_iir() -> u32 { UART.last_iir() }
-
-// #[no_mangle]
-// pub extern "C" fn dw_uart_get_tx_sent_total() -> u32 { UART.tx_sent_total() }
-
-// // 中断入口，签名与 C: void (*)(uint64_t*) 一致
-// #[no_mangle]
-// pub extern "C" fn dw_uart_interrupt_handler(_stack_pointer: *mut u64) { UART.handle_irq(); }
-
-// // 声明由 C 侧提供的 GIC/IRQ API（与 C 版一致）
-// extern "C" {
-//     fn irq_install(irq: u32, handler: extern "C" fn(*mut u64));
-//     fn gicv3_set_int_trigger(irq: u32, edge: u32);
-//     fn gicv3_set_int_target(irq: u32, target: u32);
-//     fn gicv3_enable_int(irq: u32, en: bool);
-// }
-
-// 小工具：在方法中调用 putchar_nb 时减少 borrow 检查噪音
 #[inline(always)]
 fn self_putchar_nb(uart: &DW8250, c: u8) -> bool { uart_putchar_nb_shim(uart, c) }
 
