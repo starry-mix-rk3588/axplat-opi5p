@@ -38,8 +38,8 @@ pub fn init_irq() {
 
 /// UART IRQ Handler
 #[allow(dead_code)]
-pub fn handle(irq: usize) {
-    panic!("Uart IRQ Handler: {irq}");
+pub fn handle() {
+    panic!("Uart IRQ Handler");
 }
 
 struct ConsoleIfImpl;
@@ -66,11 +66,5 @@ impl ConsoleIf for ConsoleIfImpl {
             read_len += 1;
         }
         read_len
-    }
-
-        /// Returns the IRQ number for the console, if applicable.
-    #[cfg(feature = "irq")]
-    fn irq_number() -> Option<u32> {
-        None
     }
 }

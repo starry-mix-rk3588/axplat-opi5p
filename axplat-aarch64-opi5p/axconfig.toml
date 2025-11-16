@@ -44,28 +44,85 @@ cpu-id-list = [0x00, 0x100, 0x200, 0x300, 0x400, 0x500, 0x600, 0x700]
 [devices]
 # MMIO ranges with format (`base_paddr`, `size`).
 mmio-ranges = [
-    [0xfdab0000, 0x3000],   # npu@fdab0000, npu0,npu1,npu2,len=0x3000
-    [0xfd8d8000, 0x1000],   # power-management, len = 0x400
-    [0xfd5f8000, 0x1000],   # bus ioc, len=0x100
-    [0xfd7c0000, 0x5c000],  # cru
-    [0xfeb50000, 0x1000],   # uart8250
-    [0xfeba0000, 0x1000],   # uart7
-    [0xfec40000, 0x1000],   # gpio3, len=0x100
-    [0xfe600000, 0x10000],  # arm,gic-v3
-    [0xfe680000, 0x100000], # arm,gic-v3
-    [0xfe150000, 0x10000],  # rockchip,rk3588-pcie
-    [0xfe180000, 0x10000],  # rockchip,rk3588-pcie
-    [0xfe190000, 0x10000],  # rockchip,rk3588-pcie
-    [0xfe1b0000, 0x10000],  # ethernet,gmac0
-    [0xfe1c0000, 0x10000],  # ethernet,gmac1
-    [0xfe2c0000, 0x10000],  # rockchip,sdmmc
-    [0xf3100000, 0x10000],
-    [0x0a_40c0_0000, 0x1000_0000], # PCIe ECAM/DBI space (pcie@fe180000)
-    [0xf3200000, 0xe00000],      # PCIe 32-bit MMIO (pcie@fe180000)
-    [0x09c0000000, 0x40000000],  # PCIe 64-bit prefetchable (pcie@fe180000)
+    [
+        0xfdab0000,
+        0x3000,
+    ], # npu@fdab0000, npu0,npu1,npu2,len=0x3000
+    [
+        0xfd8d8000,
+        0x1000,
+    ], # power-management, len = 0x400
+    [
+        0xfd5f8000,
+        0x1000,
+    ], # bus ioc, len=0x100
+    [
+        0xfd7c0000,
+        0x5c000,
+    ], # cru
+    [
+        0xfeb50000,
+        0x1000,
+    ], # uart8250
+    [
+        0xfeba0000,
+        0x1000,
+    ], # uart7
+    [
+        0xfec40000,
+        0x1000,
+    ], # gpio3, len=0x100
+    [
+        0xfe600000,
+        0x10000,
+    ], # arm,gic-v3
+    [
+        0xfe680000,
+        0x100000,
+    ], # arm,gic-v3
+    [
+        0xfe150000,
+        0x10000,
+    ], # rockchip,rk3588-pcie (PCIe3x4 - has network card!)
+    [
+        0xfe180000,
+        0x10000,
+    ], # rockchip,rk3588-pcie
+    [
+        0xfe190000,
+        0x10000,
+    ], # rockchip,rk3588-pcie
+    [
+        0xfe1b0000,
+        0x10000,
+    ], # ethernet,gmac0
+    [
+        0xfe1c0000,
+        0x10000,
+    ], # ethernet,gmac1
+    [
+        0xfe2c0000,
+        0x10000,
+    ], # rockchip,sdmmc
+    [
+        0xf0000000,
+        0x1000000,
+    ], # PCIe ECAM config space (pcie@fe150000) - 16MB for buses 0x00-0x0f
+    [
+        0xf3000000,
+        0x1000000,
+    ], # PCIe ECAM config space (pcie@fe180000) - 16MB - THIS IS WHAT WE USE!
+    [
+        0x0a_4000_0000,
+        0x1000_0000,
+    ], # PCIe DBI space (pcie@fe150000)
+    [
+        0x09c0000000,
+        0x40000000,
+    ], # PCIe 64-bit prefetchable (pcie@fe180000)
 ] # [(uint, uint)]
 # VirtIO MMIO ranges with format (`base_paddr`, `size`).
-virtio-mmio-ranges = [] # [(uint, uint)]
+virtio-mmio-ranges = []      # [(uint, uint)]
 root-partition-name = "root" # str
 # SD/MMC device physical address
 sdmmc-paddr = 0xfe2c0000 # uint
@@ -74,14 +131,16 @@ uart-paddr = 0xfeb50000 # uint
 # UART IRQ number (SPI, 0xd5)
 uart-irq = 0x14d # uint
 
-# Base physical address of the PCIe ECAM space (DBI space for pcie@fe180000)
-pci-ecam-base = 0x0a_40c0_0000      # uint
-# End PCI bus number (bus-range = <0x30 0x3f> in device tree)
-pci-bus-end = 0x3f                  # uint
+# Base physical address of the PCIe ECAM space (Config space for pcie@fe180000)
+# Note: Despite device tree showing bus-range=0x30-0x3f, the actual ECAM is mapped
+# at 0xf3000000 and bus numbering starts from 0 (same as U-Boot behavior)
+pci-ecam-base = 0xf300_0000 # uint
+# End PCI bus number
+pci-bus-end = 0x0f # uint
 # PCI device memory ranges (from pcie@fe180000)
 pci-ranges = [
-    [0xf3200000, 0xe00000],         # 32-bit MMIO: 14MB
-    [0x09c0000000, 0x40000000],     # 64-bit prefetchable: 1GB
+    [0xf3200000, 0xe00000],     # 32-bit MMIO: 14MB (0xf3200000-0xf3ffffff)
+    [0x09c0000000, 0x40000000], # 64-bit prefetchable: 1GB
 ] # [(uint, uint)]
 # Timer interrupt num (PPI, physical timer).
 timer-irq = 30 # uint
