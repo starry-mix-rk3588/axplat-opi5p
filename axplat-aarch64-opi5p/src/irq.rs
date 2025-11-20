@@ -1,11 +1,11 @@
 use aarch64_cpu::registers::*;
 // use alloc::{format, string::String};
-use kspin::SpinNoIrq;
-use alloc::boxed::Box;
-use core::ptr::NonNull;
-use arm_gic_driver::*;
 use crate::config::devices::{GICD_PADDR, GICR_PADDR};
 use crate::mem::phys_to_virt;
+use alloc::boxed::Box;
+use arm_gic_driver::*;
+use core::ptr::NonNull;
+use kspin::SpinNoIrq;
 use memory_addr::PhysAddr;
 use memory_addr::pa;
 
@@ -13,8 +13,7 @@ const GICD_BASE: PhysAddr = pa!(GICD_PADDR);
 const GICR_BASE: PhysAddr = pa!(GICR_PADDR);
 
 use axplat::irq::{HandlerTable, IrqHandler, IrqIf};
-use log::{debug, trace, warn, info};
-
+use log::{debug, info, trace, warn};
 
 const SPI_START: usize = 32;
 /// The maximum number of IRQs.
@@ -37,7 +36,7 @@ impl IrqIf for IrqIfImpl {
     /// Enables or disables the given IRQ.
     fn set_enable(irq_raw: usize, enabled: bool) {
         warn!("set_enable IRQ {} {}", irq_raw, enabled);
-        // set_enable(irq_raw, enabled);
+        set_enable(irq_raw, enabled);
     }
 
     /// Registers an IRQ handler for the given IRQ.
@@ -70,7 +69,7 @@ impl IrqIf for IrqIfImpl {
     /// IRQ handler table and calls the corresponding handler. If necessary, it
     /// also acknowledges the interrupt controller after handling.
     fn handle(_unused: usize) {
-        let Some(irq) =  GICR.lock().as_mut().unwrap().ack() else {
+        let Some(irq) = GICR.lock().as_mut().unwrap().ack() else {
             return;
         };
         let irq_num: usize = irq.into();
@@ -84,18 +83,18 @@ impl IrqIf for IrqIfImpl {
             GICR.lock().as_mut().unwrap().dir(irq);
         }
     }
-	fn send_ipi(_irq_num: usize, _target: axplat::irq::IpiTarget) {
-		todo!("send_ipi");
-	}
+    fn send_ipi(_irq_num: usize, _target: axplat::irq::IpiTarget) {
+        todo!("send_ipi");
+    }
 }
 
 pub(crate) fn init() {
- let mut gicd = arm_gic_driver::v3::Gic::new(
+    let mut gicd = arm_gic_driver::v3::Gic::new(
         NonNull::new(phys_to_virt(GICD_BASE).as_mut_ptr()).unwrap(),
         NonNull::new(phys_to_virt(GICR_BASE).as_mut_ptr()).unwrap(),
     );
 
-     debug!("Initializing GICD at {:#x}", GICD_BASE);
+    debug!("Initializing GICD at {:#x}", GICD_BASE);
     gicd.open().unwrap();
 
     info!(
@@ -107,19 +106,17 @@ pub(crate) fn init() {
 
     GICD.lock().replace(gicd);
     GICR.lock().replace(interface);
-    info!("GIC initialized {}",current_cpu());
+    info!("GIC initialized {}", current_cpu());
 }
 
 #[allow(dead_code)]
 pub(crate) fn init_current_cpu() {
-    debug!("Initializing GICR for current CPU {}",current_cpu());
+    debug!("Initializing GICR for current CPU {}", current_cpu());
     let mut interface = GICD.lock().as_mut().unwrap().cpu_local().unwrap();
     interface.open().unwrap();
     GICR.lock().replace(interface);
-    debug!(  "Initialized GICR for current CPU {}",current_cpu());
+    debug!("Initialized GICR for current CPU {}", current_cpu());
 }
-
-
 
 fn current_cpu() -> usize {
     MPIDR_EL1.get() as usize & 0xffffff

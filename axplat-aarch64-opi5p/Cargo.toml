@@ -31,5 +31,7 @@ aarch64-cpu = "10.0"
 memory_addr = "0.4"
 arm-gic-driver = "0.14"
 int_ratio = "0.1"
+dw_apb_uart = "0.1"
+
 [package.metadata.docs.rs]
 targets = ["aarch64-unknown-none"]

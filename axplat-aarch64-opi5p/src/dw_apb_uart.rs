@@ -3,7 +3,7 @@
 use crate::mem::phys_to_virt;
 use axplat::console::ConsoleIf;
 use axplat::mem::{PhysAddr, pa};
-use crate::uart::DW8250;
+use dw_apb_uart::DW8250;
 use kspin::SpinNoIrq;
 
 const UART_BASE: PhysAddr = pa!(crate::config::devices::UART_PADDR);
@@ -24,7 +24,7 @@ fn getchar() -> Option<u8> {
 /// UART simply initialize
 #[allow(dead_code)]
 pub fn init_early() {
-    UART.lock().early_init();
+    UART.lock().init();
 }
 
 /// Set UART IRQ Enable
@@ -68,7 +68,7 @@ impl ConsoleIf for ConsoleIfImpl {
         read_len
     }
 
-        /// Returns the IRQ number for the console, if applicable.
+    /// Returns the IRQ number for the console, if applicable.
     #[cfg(feature = "irq")]
     fn irq_number() -> Option<u32> {
         None

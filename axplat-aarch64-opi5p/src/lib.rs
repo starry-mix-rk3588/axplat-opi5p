@@ -3,8 +3,8 @@
 #[macro_use]
 extern crate axplat;
 
-extern crate log;
 extern crate alloc;
+extern crate log;
 
 pub mod config {
     //! Platform configuration module.
@@ -23,18 +23,16 @@ pub mod config {
 
 mod boot;
 mod dw_apb_uart;
+mod generic_timer;
 mod init;
 mod mem;
-mod generic_timer;
-mod psci;
 #[cfg(feature = "smp")]
 mod mp;
 mod power;
+mod psci;
 
 #[cfg(feature = "irq")]
 mod irq;
-
-mod uart;
 
 // axplat_aarch64_peripherals::time_if_impl!(TimeIfImpl);
 
